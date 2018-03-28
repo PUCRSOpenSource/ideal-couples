@@ -1,0 +1,165 @@
+#+TITLE:       T1 - Ideal couples
+#+AUTHOR:      Matthias Nunes
+#+EMAIL:       matthiasnunes@gmail.com
+#+DESCRIPTION: This document catalogs my plan of action to solve T1
+#+KEYWORDS:    artificial inteligence, agent, stable matching problem
+#+LANGUAGE:    en
+
+* Introduction
+
+The stable matching problem seems to be pretty straight forward. Our
+challenge is that we we have to solve it using an agent-based solution,
+instead of pure mathematics. Reading the specification we can already see
+some clear divisions on which we can use to tackle our problem.
+
+1. Parse input file
+2. Instantiate environment
+3. Agent movement
+4. Marry and divorce couples
+
+This project seems to be complex as a whole, but focusing on each task
+individually and separating every layer of implementation will make the
+development phase easy breezy.
+
+* Parse input file
+
+This should be the easiest task of all, just getting the information out of
+the input file. What we need to read is the number of couples, number of
+registries and the list of preferences of each agent.
+
+#+NAME Input file
+#+BEGIN_SRC txt
+
+3 4
+1 1 2 3
+2 3 1 2
+3 3 2 1
+1 2 3 1
+2 1 3 2
+3 2 1 3
+
+#+END_SRC
+
+The file should be interpreted to the following values/relations which we'll
+use in the next section.
+
+#+NAME Input file explained
+#+BEGIN_SRC txt
+
+nro_couples nro_registries
+guy_id girl_ranking_list_for_this_guy
+guy_id girl_ranking_list_for_this_guy
+guy_id girl_ranking_list_for_this_guy
+girl_id guy_ranking_list_for_this_girl
+girl_id guy_ranking_list_for_this_girl
+girl_id guy_ranking_list_for_this_girl
+
+#+END_SRC
+
+Reading the file line by line should be really straight forward in Java,
+something like the following snippet:
+
+#+BEGIN_SRC java
+
+String line;
+try {
+        BufferedReader bf = new BufferedReader(new FileReader("input.txt"));
+        line = bf.readLine();
+
+        while (line != null) {
+                // do what we need here
+                line = bf.readLine();
+        }
+
+} catch (FileNotFoundException ex) {
+        ex.printStackTrace();
+} catch (IOException ex) {
+        ex.printStackTrace();
+}
+
+#+END_SRC
+
+* Instantiate environment
+
+The main goal here would be to instantiate the environment with the
+configuration read from the input file. According to the specification, the
+only missing information would be the size of the environment, which should
+be parameterized, and the distribution of the walls.
+
+The challenge of this section is to have a good distribution of the walls,
+since they must be proportionate to the environment size. Let's write down
+what we can tell from the specification:
+
+- In a 20x20 map
+- We have 4 walls
+- With sizes
+  + 11
+  + 10
+  + 9
+  + 11
+- All distributed in the /y/ axis
+- Making the upper left corner the origin and 0 based index
+  + Positions are
+    * (3, 3)
+    * (7, 8)
+    * (12, 5)
+    * (16, 2)
+
+Taking into consideration that a environment is a map of /n/ x /n/, we can
+notice the following patterns regarding the wall distribution:
+
+1. Walls always follow the same axis
+2. The walls have, /roughly/, half of /n/ in length
+3. Number of walls is /n/ divided by 5
+
+We should check if these rules always apply.
+
+** TODO Check if rules always apply [0/3]
+   - [ ] 1
+   - [ ] 2
+   - [ ] 3
+
+* Agent
+
+** Implementation
+
+First thought: BDI architecture
+- Beliefs
+- Desires
+- Intentions
+
+
+Classes of agents to use on our solution:
+
+- Model-based reflex agents ::
+        A model-based agent can handle partially observable environments. Its
+        current state is stored inside the agent maintaining some kind of
+        structure which describes the part of the world which cannot be seen.
+        This knowledge about "how the world works" is called a model of the
+        world, hence the name "model-based agent".
+
+        A model-based reflex agent should maintain some sort of internal
+        model that depends on the percept history and thereby reflects at
+        least some of the unobserved aspects of the current state. Percept
+        history and impact of action on the environment can be determined by
+        using internal model. It then chooses an action in the same way as
+        reflex agent.
+
+- Goal-based agents ::
+        Goal-based agents further expand on the capabilities of the
+        model-based agents, by using "goal" information. Goal information
+        describes situations that are desirable. This allows the agent a way
+        to choose among multiple possibilities, selecting the one which
+        reaches a goal state. Search and planning are the subfields of
+        artificial intelligence devoted to finding action sequences that
+        achieve the agent's goals.
+
+We're way more inclined to just use model-based agents, thou.
+
+** Agent movement
+
+
+** Marry and divorce couples
+
+
+
