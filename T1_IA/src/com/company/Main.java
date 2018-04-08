@@ -54,7 +54,7 @@ public class Main {
             ex.printStackTrace();
         }
 
-        Ambiente amb = new Ambiente(100);
+        Ambiente amb = new Ambiente(5);
         amb.print_ambiente();
     }
 }
