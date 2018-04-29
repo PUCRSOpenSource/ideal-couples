@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -15,6 +13,8 @@ public class Main {
 
         String line;
         ArrayList<Agente> agentes = new ArrayList<>();
+        int nroCartorios = 0;
+
         try {
             BufferedReader bf = new BufferedReader(new FileReader("resources/input.txt"));
             line = bf.readLine();
@@ -22,7 +22,7 @@ public class Main {
             String[] array = line.split(" ");
 
             int nroCasais = Integer.parseInt(array[0]);
-            int nroCartorios = Integer.parseInt(array[1]);
+            nroCartorios = Integer.parseInt(array[1]);
 
             line = bf.readLine();
 
@@ -59,7 +59,7 @@ public class Main {
         }
 
 
-        Ambiente amb = new Ambiente(20, agentes);
+        Ambiente amb = new Ambiente(20, agentes, nroCartorios);
         amb.print_ambiente();
     }
 }

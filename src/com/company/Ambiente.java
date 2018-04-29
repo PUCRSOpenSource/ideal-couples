@@ -6,12 +6,14 @@ import java.util.Random;
 public class Ambiente {
 
     private Quadradinho mapa[][];
-    private ArrayList<Agente> listaAgentes;
-    private ArrayList<Posicao> listaPosicoes;
+    private ArrayList<Agente> agentes;
+    private ArrayList<Posicao> cartorios;
+
     private int side;
 
-    public Ambiente(int n, ArrayList<Agente> listaAgentes) {
+    public Ambiente(int n, ArrayList<Agente> listaAgentes, int nroCartorios) {
         this.side = n;
+        cartorios = new ArrayList<>();
         this.mapa = new Quadradinho[n][n];
         for (int i = 0; i < side; i++) {
             for (int j = 0; j < side; j++) {
@@ -19,10 +21,13 @@ public class Ambiente {
             }
         }
         build_walls();
+        build_cartorios(nroCartorios);
+
         for (Agente a :
                 listaAgentes) {
             placeOnMap(a);
         }
+        agentes = listaAgentes;
     }
 
     private void placeOnMap(Agente agente) {
@@ -32,7 +37,7 @@ public class Ambiente {
             if (mapa[x][y] == Quadradinho.N) {
                 agente.setPosicao(new Posicao(x, y));
                 mapa[x][y] = Quadradinho.A;
-                return;
+                break;
             }
         }
     }
@@ -44,6 +49,27 @@ public class Ambiente {
             }
             System.out.print("\n");
         }
+    }
+
+    private void build_cartorios(int nroCartorios) {
+        ArrayList<Posicao> possiveisPosicoes = new ArrayList<>();
+
+        for (int i = 0; i < side; i++) {
+            for (int j = 0; j < side; j++) {
+                if (mapa[i][j] == Quadradinho.P) {
+                    possiveisPosicoes.add(new Posicao(i, j - 1));
+                    possiveisPosicoes.add(new Posicao(i, j + 1));
+                }
+            }
+        }
+        Random rand = new Random();
+        for (int i = 0; i < nroCartorios; i++) {
+            int posicaoSorteada = rand.nextInt(possiveisPosicoes.size());
+            Posicao posicao = possiveisPosicoes.get(posicaoSorteada);
+            mapa[posicao.getX()][posicao.getY()] = Quadradinho.C;
+            cartorios.add(posicao);
+        }
+
     }
 
     private void build_walls() {

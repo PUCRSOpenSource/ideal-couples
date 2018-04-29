@@ -22,8 +22,7 @@ public class Agente {
         return id;
     }
 
-    public Posicao getPosicao()
-    {
+    public Posicao getPosicao() {
         return posicao;
     }
 
