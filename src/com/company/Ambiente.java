@@ -8,8 +8,19 @@ public class Ambiente {
     private Quadradinho mapa[][];
     private ArrayList<Agente> agentes;
     private ArrayList<Posicao> cartorios;
-
     private int side;
+
+    private int offsetSight[][] = {
+            {-2, -2}, {-2, -1}, {-2, 0}, {-2, +1}, {-2, +2},
+            {-1, -2}, {-1, -1}, {-1, 0}, {-1, +1}, {-1, +2},
+            { 0, -2}, { 0, -1},          { 0, +1}, { 0, +2},
+            {+1, -2}, {+1, -1}, {+1, 0}, {+1, +1}, {+1, +2},
+            {+2, -2}, {+2, -1}, {+2, 0}, {+2, +1}, {+2, +2}};
+
+    private int offsetMove[][] = {
+            {-1, -1}, {-1, 0}, {-1, +1},
+            { 0, -1},          { 0, +1},
+            {+1, -1}, {+1, 0}, {+1, +1}};
 
     public Ambiente(int n, ArrayList<Agente> listaAgentes, int nroCartorios) {
         this.side = n;
@@ -91,5 +102,62 @@ public class Ambiente {
             }
             currentX += wall_territory;
         }
+    }
+
+    public void activateAgentes() {
+        for (Agente a :
+                agentes) {
+            Posicao posicao = a.getPosicao();
+            ArrayList<Posicao> possibleMoves = agentPossibleMoves(posicao);
+            ArrayList<Agente> agentsInRange = agentsInRange(posicao);
+            a.takeAction(possibleMoves, agentsInRange);
+        }
+        System.out.println("Ativei todo mundo, minha gente");
+    }
+
+    private ArrayList<Posicao> agentPossibleMoves(Posicao agentPosition) {
+        ArrayList<Posicao> possibleMoves = new ArrayList<>();
+        for (int[] off :
+                offsetMove) {
+            int x = agentPosition.getX() + off[0];
+            x = adjustPosition(x);
+            int y = agentPosition.getY() + off[1];
+            y = adjustPosition(y);
+            if (mapa[x][y] == Quadradinho.N) {
+                possibleMoves.add(new Posicao(x, y));
+            }
+        }
+        return possibleMoves;
+    }
+
+    private ArrayList<Agente> agentsInRange(Posicao agentPosition) {
+        ArrayList<Agente> agentsInRange = new ArrayList<>();
+        for (int[] off :
+                offsetSight) {
+            int x = agentPosition.getX() + off[0];
+            x = adjustPosition(x);
+            int y = agentPosition.getY() + off[1];
+            y = adjustPosition(y);
+            if (mapa[x][y] == Quadradinho.A) {
+                Agente agente = getAgentByPosition(new Posicao(x, y));
+                agentsInRange.add(agente);
+            }
+        }
+        return agentsInRange;
+    }
+
+    private Agente getAgentByPosition(Posicao posicao) {
+        for (Agente a:
+             agentes) {
+            if (a.getPosicao().equals(posicao))
+                return a;
+        }
+        return null;
+    }
+
+    private int adjustPosition(int number) {
+        number = number < 0 ? 0 : number;
+        number = number >= side ? side - 1 : number;
+        return number;
     }
 }

@@ -61,5 +61,6 @@ public class Main {
 
         Ambiente amb = new Ambiente(20, agentes, nroCartorios);
         amb.print_ambiente();
+        amb.activateAgentes();
     }
 }

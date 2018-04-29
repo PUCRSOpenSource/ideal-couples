@@ -33,4 +33,8 @@ public class Agente {
     public Genero getGenero() {
         return genero;
     }
+
+    public void takeAction(ArrayList<Posicao> possibleMoves, ArrayList<Agente> agentsInRange) {
+
+    }
 }
