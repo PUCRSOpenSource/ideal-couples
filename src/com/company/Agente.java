@@ -11,20 +11,19 @@ public class Agente {
     private Genero genero;
     private Posicao posicao;
 
-    public Agente(int id, Agente conjuge, ArrayList<Integer> listaPreferencias, EstadoCivil estadoCivil, Genero genero, Posicao posicao) {
+    public Agente(int id, ArrayList<Integer> listaPreferencias, Genero genero) {
         this.id = id;
-        this.conjuge = conjuge;
         this.listaPreferencias = listaPreferencias;
-        this.estadoCivil = estadoCivil;
+        this.estadoCivil = EstadoCivil.SOLTEIRO;
         this.genero = genero;
-        this.posicao = posicao;
     }
 
     public int getId() {
         return id;
     }
 
-    public Posicao getPosicao() {
+    public Posicao getPosicao()
+    {
         return posicao;
     }
 

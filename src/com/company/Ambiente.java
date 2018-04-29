@@ -1,15 +1,16 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Ambiente {
 
     private Quadradinho mapa[][];
-    private Agente listaAgentes;
-    private Posicao listaPosicoes;
+    private ArrayList<Agente> listaAgentes;
+    private ArrayList<Posicao> listaPosicoes;
     private int side;
 
-    public Ambiente(int n) {
+    public Ambiente(int n, ArrayList<Agente> listaAgentes) {
         this.side = n;
         this.mapa = new Quadradinho[n][n];
         for (int i = 0; i < side; i++) {
@@ -18,6 +19,22 @@ public class Ambiente {
             }
         }
         build_walls();
+        for (Agente a :
+                listaAgentes) {
+            placeOnMap(a);
+        }
+    }
+
+    private void placeOnMap(Agente agente) {
+        while (true) {
+            int x = (int) (Math.random() * side);
+            int y = (int) (Math.random() * side);
+            if (mapa[x][y] == Quadradinho.N) {
+                agente.setPosicao(new Posicao(x, y));
+                mapa[x][y] = Quadradinho.A;
+                return;
+            }
+        }
     }
 
     public void print_ambiente() {

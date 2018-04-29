@@ -14,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
 
         String line;
+        ArrayList<Agente> agentes = new ArrayList<>();
         try {
             BufferedReader bf = new BufferedReader(new FileReader("resources/input.txt"));
             line = bf.readLine();
@@ -25,11 +26,11 @@ public class Main {
 
             line = bf.readLine();
 
-            String genero = "HOMI";
+            Genero genero = Genero.HOMEM;
 
             for (int i = 0; i < 2 * nroCasais; i++) {
                 if (i >= nroCasais) {
-                    genero = "MUIE";
+                    genero = Genero.MULHER;
                 }
                 String[] lineSplitted = line.split(" ");
 
@@ -41,8 +42,11 @@ public class Main {
                     preferenceList.add(Integer.valueOf(elem));
                 }
                 System.out.println(genero);
-                System.out.println("Agent: " + idAgent);
+                System.out.println("Agente: " + idAgent);
                 System.out.println("Preferences" + preferenceList);
+
+                Agente agente = new Agente(idAgent, preferenceList, genero);
+                agentes.add(agente);
 
                 line = bf.readLine();
 
@@ -54,7 +58,8 @@ public class Main {
             ex.printStackTrace();
         }
 
-        Ambiente amb = new Ambiente(5);
+
+        Ambiente amb = new Ambiente(20, agentes);
         amb.print_ambiente();
     }
 }
