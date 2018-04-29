@@ -2,6 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Ambiente {
 
@@ -36,6 +37,7 @@ public class Ambiente {
 
         for (Agente a :
                 listaAgentes) {
+            a.setAmbiente(this);
             placeOnMap(a);
         }
         agentes = listaAgentes;
@@ -105,14 +107,18 @@ public class Ambiente {
     }
 
     public void activateAgentes() {
-        for (Agente a :
-                agentes) {
-            Posicao posicao = a.getPosicao();
-            ArrayList<Posicao> possibleMoves = agentPossibleMoves(posicao);
-            ArrayList<Agente> agentsInRange = agentsInRange(posicao);
-            a.takeAction(possibleMoves, agentsInRange);
+        Scanner in = new Scanner(System.in);
+        while (true) {
+            print_ambiente();
+            in.nextLine();
+            for (Agente a :
+                    agentes) {
+                Posicao posicao = a.getPosicao();
+                ArrayList<Posicao> possibleMoves = agentPossibleMoves(posicao);
+                ArrayList<Agente> agentsInRange = agentsInRange(posicao);
+                a.takeAction(possibleMoves, agentsInRange);
+            }
         }
-        System.out.println("Ativei todo mundo, minha gente");
     }
 
     private ArrayList<Posicao> agentPossibleMoves(Posicao agentPosition) {
@@ -159,5 +165,10 @@ public class Ambiente {
         number = number < 0 ? 0 : number;
         number = number >= side ? side - 1 : number;
         return number;
+    }
+
+    public void move(Posicao from, Posicao to) {
+        mapa[from.getX()][from.getY()] = Quadradinho.N;
+        mapa[to.getX()][to.getY()] = Quadradinho.A;
     }
 }

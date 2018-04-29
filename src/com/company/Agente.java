@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Agente {
 
@@ -10,12 +11,14 @@ public class Agente {
     private EstadoCivil estadoCivil;
     private Genero genero;
     private Posicao posicao;
+    private Ambiente amb;
 
     public Agente(int id, ArrayList<Integer> listaPreferencias, Genero genero) {
         this.id = id;
         this.listaPreferencias = listaPreferencias;
         this.estadoCivil = EstadoCivil.SOLTEIRO;
         this.genero = genero;
+        this.amb = amb;
     }
 
     public int getId() {
@@ -34,7 +37,14 @@ public class Agente {
         return genero;
     }
 
-    public void takeAction(ArrayList<Posicao> possibleMoves, ArrayList<Agente> agentsInRange) {
+    public void setAmbiente(Ambiente amb) {
+        this.amb = amb;
+    }
 
+    public void takeAction(ArrayList<Posicao> possibleMoves, ArrayList<Agente> agentsInRange) {
+        Random rand = new Random();
+        Posicao newPosicao = possibleMoves.get(rand.nextInt(possibleMoves.size()));
+        amb.move(posicao, newPosicao);
+        posicao = newPosicao;
     }
 }
