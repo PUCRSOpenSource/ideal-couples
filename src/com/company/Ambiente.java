@@ -171,4 +171,24 @@ public class Ambiente {
         mapa[from.getX()][from.getY()] = Quadradinho.N;
         mapa[to.getX()][to.getY()] = Quadradinho.A;
     }
+
+    public Posicao getNearestCartorioByPosition(Posicao agentPosition) {
+        int aux = Integer.MAX_VALUE;
+        Posicao nearestCartorio = null;
+        for (Posicao cartorio :
+                cartorios) {
+            int distance = Heuristic.manhattanDistance(agentPosition, cartorio);
+            if (distance <= aux) {
+                aux = distance;
+                nearestCartorio = cartorio;
+            }
+        }
+        return nearestCartorio;
+    }
+
+    // A* Algorithm
+    private ArrayList<Posicao> aStar(Posicao from, Posicao to) {
+        ArrayList<>
+        return null;
+    }
 }
