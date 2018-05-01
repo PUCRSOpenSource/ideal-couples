@@ -26,9 +26,16 @@ public class Posicao {
         this.y = y;
     }
 
-    public boolean equals(Posicao pos) {
+    @Override
+    public boolean equals(Object o) {
+        Posicao pos = (Posicao) o;
         if (x == pos.getX() && y == pos.getY())
             return true;
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Position {x: " + y + ", y: " + x + "} ";
     }
 }

@@ -42,9 +42,18 @@ public class Agente {
     }
 
     public void takeAction(ArrayList<Posicao> possibleMoves, ArrayList<Agente> agentsInRange) {
-        Random rand = new Random();
-        Posicao newPosicao = possibleMoves.get(rand.nextInt(possibleMoves.size()));
-        amb.move(posicao, newPosicao);
-        posicao = newPosicao;
+        Posicao to = amb.getNearestCartorioByPosition(posicao);
+        ArrayList<Posicao> path = amb.aStar(posicao, to);
+        System.out.println("Agent: " + id);
+        System.out.println("Gender: " + genero);
+        System.out.println("Position: " + posicao);
+        System.out.println("Path: " + path);
+        System.out.println("-------------");
+
+
+//        Random rand = new Random();
+//        Posicao newPosicao = possibleMoves.get(rand.nextInt(possibleMoves.size()));
+//        amb.move(posicao, newPosicao);
+//        posicao = newPosicao;
     }
 }

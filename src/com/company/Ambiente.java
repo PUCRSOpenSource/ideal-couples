@@ -106,10 +106,10 @@ public class Ambiente {
     }
 
     public void activateAgentes() {
-        Scanner in = new Scanner(System.in);
-        while (true) {
+//        Scanner in = new Scanner(System.in);
+//        while (true) {
             print_ambiente();
-            in.nextLine();
+//            in.nextLine();
             for (Agente a :
                     agentes) {
                 Posicao posicao = a.getPosicao();
@@ -117,22 +117,7 @@ public class Ambiente {
                 ArrayList<Agente> agentsInRange = agentsInRange(posicao);
                 a.takeAction(possibleMoves, agentsInRange);
             }
-        }
-    }
-
-    private ArrayList<Posicao> agentPossibleMoves(Posicao agentPosition) {
-        ArrayList<Posicao> possibleMoves = new ArrayList<>();
-        for (int[] off :
-                offsetMove) {
-            int x = agentPosition.getX() + off[0];
-            x = adjustPosition(x);
-            int y = agentPosition.getY() + off[1];
-            y = adjustPosition(y);
-            if (mapa[x][y] == Quadradinho.N) {
-                possibleMoves.add(new Posicao(x, y));
-            }
-        }
-        return possibleMoves;
+//        }
     }
 
     private ArrayList<Agente> agentsInRange(Posicao agentPosition) {
@@ -140,9 +125,11 @@ public class Ambiente {
         for (int[] off :
                 offsetSight) {
             int x = agentPosition.getX() + off[0];
-            x = adjustPosition(x);
+            if (x < 0 || x >= side)
+                continue;
             int y = agentPosition.getY() + off[1];
-            y = adjustPosition(y);
+            if (y < 0 || y >= side)
+                continue;
             if (mapa[x][y] == Quadradinho.A) {
                 Agente agente = getAgentByPosition(new Posicao(x, y));
                 agentsInRange.add(agente);
@@ -151,19 +138,56 @@ public class Ambiente {
         return agentsInRange;
     }
 
+    private ArrayList<Posicao> agentPossibleMoves(Posicao agentPosition) {
+        return getEmptyPositions(agentPosition, offsetMove);
+    }
+
+    private ArrayList<Posicao> possibleMoves(Posicao position) {
+        return getEmptyPositions(position, offsetSight);
+
+    }
+
+    private ArrayList<Posicao> getEmptyPositions(Posicao position, int[][] offsetSight) {
+        ArrayList<Posicao> possibleMoves = new ArrayList<>();
+        for (int[] off :
+                offsetSight) {
+            int x = position.getX() + off[0];
+            if (x < 0 || x >= side)
+                continue;
+            int y = position.getY() + off[1];
+            if (y < 0 || y >= side)
+                continue;
+            if (mapa[x][y] == Quadradinho.N) {
+                possibleMoves.add(new Posicao(x, y));
+            }
+        }
+        return possibleMoves;
+    }
+
+    private ArrayList<Posicao> getEmptyPositionsPlusCartorios(Posicao position, int[][] offsetSight) {
+        ArrayList<Posicao> possibleMoves = new ArrayList<>();
+        for (int[] off :
+                offsetSight) {
+            int x = position.getX() + off[0];
+            if (x < 0 || x >= side)
+                continue;
+            int y = position.getY() + off[1];
+            if (y < 0 || y >= side)
+                continue;
+            if (mapa[x][y] == Quadradinho.N || mapa[x][y] == Quadradinho.C) {
+                possibleMoves.add(new Posicao(x, y));
+            }
+        }
+        return possibleMoves;
+    }
+
     private Agente getAgentByPosition(Posicao posicao) {
-        for (Agente a:
-             agentes) {
+        for (Agente a :
+                agentes) {
             if (a.getPosicao().equals(posicao))
                 return a;
         }
         return null;
-    }
-
-    private int adjustPosition(int number) {
-        number = number < 0 ? 0 : number;
-        number = number >= side ? side - 1 : number;
-        return number;
     }
 
     public void move(Posicao from, Posicao to) {
@@ -186,8 +210,53 @@ public class Ambiente {
     }
 
     // A* Algorithm
-    private ArrayList<Posicao> aStar(Posicao from, Posicao to) {
-        ArrayList<>
-        return null;
+    public ArrayList<Posicao> aStar(Posicao from, Posicao to) {
+        PriorityQueue<QueueElement> open = new PriorityQueue<>(new QueueElementComparator());
+        open.add(new QueueElement(from, 0));
+        HashSet<QueueElement> closed = new HashSet<>();
+        while (open.peek() != null && !open.peek().getPosition().equals(to)) {
+            QueueElement lowestRank = open.poll();
+            closed.add(lowestRank);
+            ArrayList<Posicao> possibleMoves = getEmptyPositionsPlusCartorios(lowestRank.getPosition(), offsetMove);
+            for (Posicao neighbor :
+                    possibleMoves){
+                int cost = lowestRank.getValue() + 1;
+                QueueElement neighborQueueElement = new QueueElement(neighbor, cost);
+                if (inOpenCostLess(open, neighborQueueElement))
+                    open.remove(neighborQueueElement);
+                if (notInOpenAndNotInClosed(neighborQueueElement, open, closed))
+                    neighborQueueElement.setValue(cost);
+                    neighborQueueElement.setPriority(cost + Heuristic.manhattanDistance(neighbor, to));
+                    neighborQueueElement.setParent(lowestRank);
+                    open.add(neighborQueueElement);
+            }
+        }
+        QueueElement lastVisited = open.peek();
+        if (lastVisited == null)
+            return new ArrayList<Posicao>();
+        return reconstructPath(lastVisited);
+    }
+
+    private ArrayList<Posicao> reconstructPath(QueueElement lastVisited) {
+        QueueElement current = lastVisited;
+        ArrayList<Posicao> path = new ArrayList<>();
+        while (current.getParent() != null) {
+            path.add(0, current.getPosition());
+            current = current.getParent();
+        }
+        return path;
+    }
+
+    private boolean notInOpenAndNotInClosed(QueueElement neighbor, PriorityQueue<QueueElement> open, HashSet<QueueElement> closed) {
+        return !open.contains(neighbor) && !closed.contains(neighbor);
+    }
+
+    private boolean inOpenCostLess(PriorityQueue<QueueElement> open, QueueElement neighbor) {
+        for (QueueElement qe :
+                open) {
+            if (qe.getPosition().equals(neighbor.getPosition()) && qe.getValue() > neighbor.getValue())
+                return true;
+        }
+        return false;
     }
 }

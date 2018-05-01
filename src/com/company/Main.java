@@ -59,7 +59,7 @@ public class Main {
         }
 
 
-        Ambiente amb = new Ambiente(5, agentes, nroCartorios);
+        Ambiente amb = new Ambiente(10, agentes, nroCartorios);
         amb.activateAgentes();
     }
 }
