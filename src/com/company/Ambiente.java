@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Ambiente {
 
@@ -81,6 +79,7 @@ public class Ambiente {
             Posicao posicao = possiveisPosicoes.get(posicaoSorteada);
             mapa[posicao.getX()][posicao.getY()] = Quadradinho.C;
             cartorios.add(posicao);
+            possiveisPosicoes.remove(posicaoSorteada);
         }
 
     }
