@@ -66,10 +66,16 @@ public class Agente {
                 }
                 break;
             case CASADO:
+                idle(possibleMoves);
                 break;
             case DATING:
                 if (genero == Genero.HOMEM) {
-                    if (!pathToCartorio.isEmpty()) {
+                    if (pathToCartorio.isEmpty()) {
+                        changeStateToCasado();
+                        Posicao cartorio = posicao;
+                        idle(possibleMoves);
+                        amb.rebuildCartorio(cartorio);
+                    } else {
                         Posicao newPosition = pathToCartorio.remove(0);
                         move(newPosition);
                     }
@@ -87,6 +93,11 @@ public class Agente {
             patriarchy();
         else
             conjuge.patriarchy();
+    }
+
+    public void changeStateToCasado() {
+        state = State.CASADO;
+//        conjuge.setState(State.CASADO);
     }
 
     public void patriarchy() {

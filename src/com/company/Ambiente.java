@@ -273,4 +273,8 @@ public class Ambiente {
         Posicao pos = woman.getPosicao();
         mapa[pos.getX()][pos.getY()] = Quadradinho.N;
     }
+
+    public void rebuildCartorio(Posicao pos) {
+        mapa[pos.getX()][pos.getY()] = Quadradinho.C;
+    }
 }
