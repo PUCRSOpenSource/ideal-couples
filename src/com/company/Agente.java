@@ -68,7 +68,12 @@ public class Agente {
             case CASADO:
                 break;
             case DATING:
-                System.out.println("oi marina");
+                if (genero == Genero.HOMEM) {
+                    if (!pathToCartorio.isEmpty()) {
+                        Posicao newPosition = pathToCartorio.remove(0);
+                        move(newPosition);
+                    }
+                }
                 break;
         }
     }
