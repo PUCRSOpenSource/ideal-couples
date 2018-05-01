@@ -268,4 +268,9 @@ public class Ambiente {
             return true;
         return false;
     }
+
+    public void eraseWomanFromMap(Agente woman) {
+        Posicao pos = woman.getPosicao();
+        mapa[pos.getX()][pos.getY()] = Quadradinho.N;
+    }
 }

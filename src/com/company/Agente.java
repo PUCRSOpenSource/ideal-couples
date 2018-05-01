@@ -13,6 +13,7 @@ public class Agente {
     private Posicao posicao;
     private Ambiente amb;
     private Direction direction;
+    private ArrayList<Posicao> pathToCartorio;
 
     public Agente(int id, ArrayList<Integer> listaPreferencias, Genero genero) {
         this.id = id;
@@ -67,6 +68,7 @@ public class Agente {
             case CASADO:
                 break;
             case DATING:
+                System.out.println("oi marina");
                 break;
         }
     }
@@ -74,8 +76,18 @@ public class Agente {
     public void changeStateToDating(Agente pretendente) {
         conjuge = pretendente;
         state = State.DATING;
-        pretendente.setConjuge(this);
-        pretendente.setState(State.DATING);
+        conjuge.setConjuge(this);
+        conjuge.setState(State.DATING);
+        if (genero == Genero.HOMEM)
+            patriarchy();
+        else
+            conjuge.patriarchy();
+    }
+
+    public void patriarchy() {
+        amb.eraseWomanFromMap(conjuge);
+        Posicao cartorio = amb.getNearestCartorioByPosition(posicao);
+        pathToCartorio = amb.aStar(posicao, cartorio);
     }
 
     private Agente shouldChangeState(ArrayList<Agente> agentsInRange) {
@@ -83,7 +95,7 @@ public class Agente {
         for (Agente a :
                 agentsInRange) {
             boolean euQuero = false;
-            if (a.getGenero() == genero.getOpposite() && vamoFica(a) ) {
+            if (a.getGenero() == genero.getOpposite() && vamoFica(a)) {
                 euQuero = true;
             }
             boolean elaQuer = false;
