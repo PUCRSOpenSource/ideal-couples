@@ -106,10 +106,10 @@ public class Ambiente {
     }
 
     public void activateAgentes() {
-//        Scanner in = new Scanner(System.in);
-//        while (true) {
+        Scanner in = new Scanner(System.in);
+        while (true) {
             print_ambiente();
-//            in.nextLine();
+            in.nextLine();
             for (Agente a :
                     agentes) {
                 Posicao posicao = a.getPosicao();
@@ -117,7 +117,7 @@ public class Ambiente {
                 ArrayList<Agente> agentsInRange = agentsInRange(posicao);
                 a.takeAction(possibleMoves, agentsInRange);
             }
-//        }
+        }
     }
 
     private ArrayList<Agente> agentsInRange(Posicao agentPosition) {
@@ -219,16 +219,16 @@ public class Ambiente {
             closed.add(lowestRank);
             ArrayList<Posicao> possibleMoves = getEmptyPositionsPlusCartorios(lowestRank.getPosition(), offsetMove);
             for (Posicao neighbor :
-                    possibleMoves){
+                    possibleMoves) {
                 int cost = lowestRank.getValue() + 1;
                 QueueElement neighborQueueElement = new QueueElement(neighbor, cost);
                 if (inOpenCostLess(open, neighborQueueElement))
                     open.remove(neighborQueueElement);
                 if (notInOpenAndNotInClosed(neighborQueueElement, open, closed))
                     neighborQueueElement.setValue(cost);
-                    neighborQueueElement.setPriority(cost + Heuristic.manhattanDistance(neighbor, to));
-                    neighborQueueElement.setParent(lowestRank);
-                    open.add(neighborQueueElement);
+                neighborQueueElement.setPriority(cost + Heuristic.manhattanDistance(neighbor, to));
+                neighborQueueElement.setParent(lowestRank);
+                open.add(neighborQueueElement);
             }
         }
         QueueElement lastVisited = open.peek();
@@ -257,6 +257,15 @@ public class Ambiente {
             if (qe.getPosition().equals(neighbor.getPosition()) && qe.getValue() > neighbor.getValue())
                 return true;
         }
+        return false;
+    }
+
+    public boolean canMove(Posicao position) {
+        if (position.getX() < 0 || position.getX() >= side || position.getY() < 0 || position.getY() >= side)
+            return false;
+        Quadradinho quad = mapa[position.getX()][position.getY()];
+        if (quad == Quadradinho.N)
+            return true;
         return false;
     }
 }

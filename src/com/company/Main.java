@@ -58,7 +58,6 @@ public class Main {
             ex.printStackTrace();
         }
 
-
         Ambiente amb = new Ambiente(10, agentes, nroCartorios);
         amb.activateAgentes();
     }

@@ -8,17 +8,18 @@ public class Agente {
     private int id;
     private Agente conjuge;
     private ArrayList<Integer> listaPreferencias;
-    private EstadoCivil estadoCivil;
+    private State state;
     private Genero genero;
     private Posicao posicao;
     private Ambiente amb;
+    private Direction direction;
 
     public Agente(int id, ArrayList<Integer> listaPreferencias, Genero genero) {
         this.id = id;
         this.listaPreferencias = listaPreferencias;
-        this.estadoCivil = EstadoCivil.SOLTEIRO;
+        this.state = State.SOLTEIRO;
         this.genero = genero;
-        this.amb = amb;
+        this.direction = Direction.randomDirection();
     }
 
     public int getId() {
@@ -42,18 +43,29 @@ public class Agente {
     }
 
     public void takeAction(ArrayList<Posicao> possibleMoves, ArrayList<Agente> agentsInRange) {
-        Posicao to = amb.getNearestCartorioByPosition(posicao);
-        ArrayList<Posicao> path = amb.aStar(posicao, to);
-        System.out.println("Agent: " + id);
-        System.out.println("Gender: " + genero);
-        System.out.println("Position: " + posicao);
-        System.out.println("Path: " + path);
-        System.out.println("-------------");
+        switch (state) {
+            case SOLTEIRO:
+                idle(possibleMoves);
+                break;
+            case CASADO:
+                break;
+            case DATING:
+                break;
+        }
+    }
 
-
-//        Random rand = new Random();
-//        Posicao newPosicao = possibleMoves.get(rand.nextInt(possibleMoves.size()));
-//        amb.move(posicao, newPosicao);
-//        posicao = newPosicao;
+    public void idle(ArrayList<Posicao> possibleMoves) {
+        int[] offset = direction.getOffset();
+        Posicao newPosition = new Posicao(posicao.getX() + offset[0], posicao.getY() + offset[1]);
+        if (amb.canMove(newPosition)) {
+            amb.move(posicao, newPosition);
+            posicao = newPosition;
+        } else {
+            direction = Direction.randomDirection(direction);
+            Random rand = new Random();
+            newPosition = possibleMoves.get(rand.nextInt(possibleMoves.size()));
+            amb.move(posicao, newPosition);
+            posicao = newPosition;
+        }
     }
 }
