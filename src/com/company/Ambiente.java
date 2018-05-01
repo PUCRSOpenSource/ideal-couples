@@ -95,7 +95,7 @@ public class Ambiente {
         for (int i = 0; i < nro_walls; i++) {
             int wallLength = side / 2 + rand.nextInt(1);
             int wall_x_position_in_territory = wall_territory / 2 + rand.nextInt(1);
-            int wall_y_position_in_territory = rand.nextInt(side - wallLength) + 1;
+            int wall_y_position_in_territory = rand.nextInt(side - wallLength - 2) + 1;
 
             int wallX = currentX + wall_x_position_in_territory;
             int endY = wall_y_position_in_territory + wallLength;
